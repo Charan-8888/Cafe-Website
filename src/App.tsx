@@ -9,12 +9,13 @@ import { OrderProvider } from './context/OrderContext';
 const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
 const MenuPage = lazy(() => import('./pages/MenuPage').then(m => ({ default: m.MenuPage })));
 const ReservationPage = lazy(() => import('./pages/ReservationPage').then(m => ({ default: m.ReservationPage })));
+const isGitHubPages = typeof window !== 'undefined' && window.location.hostname.includes('github.io');
 
 const App: React.FC = () => {
     return (
         <OrderProvider>
         <ReservationProvider>
-            <BrowserRouter  basename="/Cafe-Website/">
+            <BrowserRouter basename={isGitHubPages ? "/Cafe-Website" : ""}>
                 <Suspense fallback={
                     <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#110e0c', color: '#c68e17', fontFamily: 'Playfair Display, serif', fontSize: '1.5rem' }}>
                         Loading Aura...

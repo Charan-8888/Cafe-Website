@@ -1,4 +1,6 @@
-export const menuItems = [
+import type { MenuItem } from '../types';
+
+export const menuItems: MenuItem[] = [
   {
     id: 'espresso',
     title: 'Espresso',
@@ -298,11 +300,11 @@ export const menuItems = [
   },
 ];
 
-export const getMenuItemById = (itemId) => menuItems.find((item) => item.id === itemId);
+export const getMenuItemById = (itemId?: string) => menuItems.find((item) => item.id === itemId);
 
 export const menuTags = [...new Set(menuItems.flatMap((item) => item.tags))].sort();
 
-export const menuCategories = menuItems.reduce((categories, item) => {
+export const menuCategories = menuItems.reduce<Record<string, MenuItem[]>>((categories, item) => {
   const next = { ...categories };
   next[item.category] = [...(next[item.category] || []), item];
   return next;

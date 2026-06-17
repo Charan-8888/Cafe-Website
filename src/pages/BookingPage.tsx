@@ -1,5 +1,6 @@
 import { Navigate, useParams } from 'react-router-dom';
 import BookingFormContainer from '../components/BookingFormContainer';
+import type { BookingMode } from '../types';
 
 export default function BookingPage() {
   const { mode = 'reserve' } = useParams();
@@ -8,5 +9,5 @@ export default function BookingPage() {
     return <Navigate to="/booking/reserve" replace />;
   }
 
-  return <BookingFormContainer key={mode} mode={mode} />;
+  return <BookingFormContainer key={mode} mode={mode as BookingMode} />;
 }

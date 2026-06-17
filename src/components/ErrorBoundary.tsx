@@ -1,7 +1,12 @@
 import { Component } from 'react';
 import Fallback from './Fallback';
+import type { PropsWithChildren } from '../types';
 
-export default class ErrorBoundary extends Component {
+type ErrorBoundaryState = {
+  hasError: boolean;
+};
+
+export default class ErrorBoundary extends Component<PropsWithChildren, ErrorBoundaryState> {
   state = { hasError: false };
 
   static getDerivedStateFromError() {

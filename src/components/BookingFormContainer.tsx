@@ -1,9 +1,11 @@
 import { useRef, useState } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBooking } from '../context/useBooking';
 import BookingFormPresenter from './BookingFormPresenter';
+import type { BookingErrors, BookingForm, BookingMode } from '../types';
 
-const createInitialForm = (mode) => ({
+const createInitialForm = (mode: BookingMode): BookingForm => ({
   name: '',
   email: '',
   date: '',
@@ -12,8 +14,8 @@ const createInitialForm = (mode) => ({
   type: mode,
 });
 
-const validate = (form, mode, orderValue) => {
-  const errors = {};
+const validate = (form: BookingForm, mode: BookingMode, orderValue: string): BookingErrors => {
+  const errors: BookingErrors = {};
 
   if (form.name.trim().length < 2) errors.name = 'Name must be at least 2 characters.';
   if (!/^\S+@\S+\.\S+$/.test(form.email)) errors.email = 'Enter a valid email address.';
@@ -26,19 +28,23 @@ const validate = (form, mode, orderValue) => {
   return errors;
 };
 
-export default function BookingFormContainer({ mode }) {
+type BookingFormContainerProps = {
+  mode: BookingMode;
+};
+
+export default function BookingFormContainer({ mode }: BookingFormContainerProps) {
   const navigate = useNavigate();
   const { saveBooking } = useBooking();
-  const orderRef = useRef(null);
+  const orderRef = useRef<HTMLTextAreaElement>(null);
   const [form, setForm] = useState(() => createInitialForm(mode));
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<BookingErrors>({});
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const order = orderRef.current?.value || '';
     const nextErrors = validate(form, mode, order);

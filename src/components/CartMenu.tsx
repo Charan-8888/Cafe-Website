@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/useCart';
+import type { CartItem, MenuItem } from '../types';
 
-const formatPrice = (price) =>
+const formatPrice = (price: number) =>
   new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
@@ -19,7 +20,14 @@ function CartIcon() {
   );
 }
 
-function CartItemRow({ item, onIncrement, onDecrement, onRemove }) {
+type CartItemRowProps = {
+  item: CartItem;
+  onIncrement: (item: CartItem) => void;
+  onDecrement: (cartItemId: string) => void;
+  onRemove: (cartItemId: string) => void;
+};
+
+function CartItemRow({ item, onIncrement, onDecrement, onRemove }: CartItemRowProps) {
   return (
     <li>
       <div className="cart-item-summary">
@@ -47,7 +55,17 @@ function CartItemRow({ item, onIncrement, onDecrement, onRemove }) {
   );
 }
 
-function CartContents({ items, cartTotal, onIncrement, onDecrement, onRemove, onClear, onCheckout }) {
+type CartContentsProps = {
+  items: CartItem[];
+  cartTotal: number;
+  onIncrement: (item: MenuItem | CartItem) => void;
+  onDecrement: (cartItemId: string) => void;
+  onRemove: (cartItemId: string) => void;
+  onClear: () => void;
+  onCheckout: () => void;
+};
+
+function CartContents({ items, cartTotal, onIncrement, onDecrement, onRemove, onClear, onCheckout }: CartContentsProps) {
   if (items.length === 0) return <p>No items yet.</p>;
 
   return (

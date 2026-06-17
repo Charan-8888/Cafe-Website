@@ -1,19 +1,21 @@
 import { useEffect, useMemo, useState } from 'react';
+import type { MouseEvent } from 'react';
 import { menuCategories, menuItems } from '../data/menuItems';
 import { useCart } from '../context/useCart';
+import type { MenuItem } from '../types';
 
-const formatPrice = (price) =>
+const formatPrice = (price: number) =>
   new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
     maximumFractionDigits: 0,
   }).format(price);
 
-function useEscapeKey(isActive, onEscape) {
+function useEscapeKey(isActive: boolean, onEscape: () => void) {
   useEffect(() => {
     if (!isActive) return undefined;
 
-    const handleKeyDown = (event) => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onEscape();
     };
 
@@ -22,7 +24,12 @@ function useEscapeKey(isActive, onEscape) {
   }, [isActive, onEscape]);
 }
 
-function MenuItemCard({ item, onViewDetails }) {
+type MenuItemCardProps = {
+  item: MenuItem;
+  onViewDetails: (item: MenuItem) => void;
+};
+
+function MenuItemCard({ item, onViewDetails }: MenuItemCardProps) {
   const { addToCart } = useCart();
 
   return (
@@ -63,7 +70,13 @@ function MenuItemCard({ item, onViewDetails }) {
   );
 }
 
-function MenuDetailsModal({ item, onAddToCart, onClose }) {
+type MenuDetailsModalProps = {
+  item: MenuItem | null;
+  onAddToCart: (item: MenuItem) => void;
+  onClose: () => void;
+};
+
+function MenuDetailsModal({ item, onAddToCart, onClose }: MenuDetailsModalProps) {
   if (!item) return null;
 
   return (
@@ -73,7 +86,7 @@ function MenuDetailsModal({ item, onAddToCart, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="menu-modal-title"
-        onClick={(event) => event.stopPropagation()}
+        onClick={(event: MouseEvent<HTMLDivElement>) => event.stopPropagation()}
       >
         <button type="button" className="menu-modal-close" aria-label="Close details" onClick={onClose}>
           x
@@ -111,7 +124,7 @@ function MenuDetailsModal({ item, onAddToCart, onClose }) {
 }
 
 export default function MenuPage() {
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const { addToCart } = useCart();
   const visibleCategories = useMemo(() => menuCategories, []);
 

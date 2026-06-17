@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useBooking } from '../context/useBooking';
+import type { Booking, PropsWithChildren } from '../types';
 
-function SummaryActions({ onClearBookings }) {
+function SummaryActions({ onClearBookings }: { onClearBookings?: () => void }) {
   return (
     <div className="button-row centered">
       <Link to="/booking/reserve" className="btn btn-secondary">
@@ -30,7 +31,12 @@ function EmptyBookings() {
   );
 }
 
-function BookingDetails({ booking, bookingLabel, children }) {
+type BookingDetailsProps = PropsWithChildren & {
+  booking: Booking;
+  bookingLabel: string;
+};
+
+function BookingDetails({ booking, bookingLabel, children }: BookingDetailsProps) {
   const isReserve = booking.type === 'reserve';
 
   return (
@@ -57,7 +63,7 @@ function BookingDetails({ booking, bookingLabel, children }) {
   );
 }
 
-function HistoryCard({ booking, index }) {
+function HistoryCard({ booking, index }: { booking: Booking; index: number }) {
   const isReserve = booking.type === 'reserve';
   const details = isReserve
     ? `${booking.guests} guests on ${booking.date} at ${booking.time}`
@@ -74,7 +80,7 @@ function HistoryCard({ booking, index }) {
   );
 }
 
-function BookingHistory({ bookings }) {
+function BookingHistory({ bookings }: { bookings: Booking[] }) {
   return (
     <div className="container booking-history">
       <div className="section-header center">

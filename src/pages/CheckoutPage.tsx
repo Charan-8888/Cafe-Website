@@ -1,15 +1,26 @@
 import { Link } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 import { useCart } from '../context/useCart';
+import type { CartItem } from '../types';
 
-const formatPrice = (price) =>
+const formatPrice = (price: number) =>
   new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
     maximumFractionDigits: 0,
   }).format(price);
 
-function CheckoutItem({ item }) {
+type ServiceMode = 'pickup' | 'dine-in';
+
+type OrderSummary = {
+  itemCount: number;
+  mode: ServiceMode;
+  name: string;
+  time: string;
+  total: number;
+};
+
+function CheckoutItem({ item }: { item: CartItem }) {
   const lineTotal = item.price * item.quantity;
 
   return (
@@ -38,7 +49,7 @@ function EmptyCheckout() {
   );
 }
 
-function ConfirmationPanel({ orderSummary }) {
+function ConfirmationPanel({ orderSummary }: { orderSummary: OrderSummary }) {
   return (
     <div className="container summary-panel checkout-panel order-confirmation">
       <span className="section-subtitle">Order placed</span>
@@ -67,12 +78,12 @@ function ConfirmationPanel({ orderSummary }) {
 
 export default function CheckoutPage() {
   const { items, itemCount, cartTotal, clearCart } = useCart();
-  const [serviceMode, setServiceMode] = useState('pickup');
+  const [serviceMode, setServiceMode] = useState<ServiceMode>('pickup');
   const [customerName, setCustomerName] = useState('');
   const [targetTime, setTargetTime] = useState('');
   const [promoCode, setPromoCode] = useState('');
   const [tipRate, setTipRate] = useState(0);
-  const [orderSummary, setOrderSummary] = useState(null);
+  const [orderSummary, setOrderSummary] = useState<OrderSummary | null>(null);
   const promoIsActive = promoCode.trim().toUpperCase() === 'AURA10';
   const checkoutTotals = useMemo(() => {
     const serviceFee = serviceMode === 'dine-in' ? 60 : 0;
@@ -125,7 +136,7 @@ export default function CheckoutPage() {
                   name="serviceMode"
                   value="pickup"
                   checked={serviceMode === 'pickup'}
-                  onChange={(event) => setServiceMode(event.target.value)}
+                  onChange={(event) => setServiceMode(event.target.value as ServiceMode)}
                 />
                 Pickup
               </label>
@@ -135,7 +146,7 @@ export default function CheckoutPage() {
                   name="serviceMode"
                   value="dine-in"
                   checked={serviceMode === 'dine-in'}
-                  onChange={(event) => setServiceMode(event.target.value)}
+                  onChange={(event) => setServiceMode(event.target.value as ServiceMode)}
                 />
                 Dine in
               </label>

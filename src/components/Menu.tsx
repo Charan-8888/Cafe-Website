@@ -1,6 +1,12 @@
 // Unidirectional Data Flow: Props passed down from parent to child
 // Component-driven thinking: Isolating the reusable item structure
-const MenuItem = ({ title, price, description }) => {
+type MenuItemProps = {
+    title: string;
+    price: string;
+    description: string;
+};
+
+const MenuItem = ({ title, price, description }: MenuItemProps) => {
     return (
         <div className="menu-item">
             <div className="menu-item-header">

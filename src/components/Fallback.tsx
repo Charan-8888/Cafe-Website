@@ -1,4 +1,8 @@
-export default function Fallback({ onReset }) {
+type FallbackProps = {
+  onReset: () => void;
+};
+
+export default function Fallback({ onReset }: FallbackProps) {
   return (
     <section className="status-page">
       <span className="section-subtitle">Something went wrong</span>

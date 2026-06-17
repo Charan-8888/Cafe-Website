@@ -12,6 +12,7 @@ import BookingSummaryPage from './pages/BookingSummaryPage';
 import AccountPage from './pages/AccountPage';
 import NotFoundPage from './pages/NotFoundPage';
 import CheckoutPage from './pages/CheckoutPage';
+import type { PropsWithChildren } from './types';
 
 function AppRoutes() {
   return (
@@ -33,7 +34,7 @@ function AppRoutes() {
   );
 }
 
-function AppProviders({ children }) {
+function AppProviders({ children }: PropsWithChildren) {
   return (
     <BookingProvider>
       <CartProvider>{children}</CartProvider>

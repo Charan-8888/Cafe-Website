@@ -1,8 +1,17 @@
-function FieldError({ message }) {
+import type { ChangeEventHandler, FormEventHandler, InputHTMLAttributes, RefObject } from 'react';
+import type { BookingErrors, BookingForm, BookingMode } from '../types';
+
+function FieldError({ message }: { message?: string }) {
   return message ? <span className="form-error">{message}</span> : null;
 }
 
-function InputField({ error, id, label, ...inputProps }) {
+type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
+  error?: string;
+  id: string;
+  label: string;
+};
+
+function InputField({ error, id, label, ...inputProps }: InputFieldProps) {
   return (
     <div className="input-group">
       <label htmlFor={id}>{label}</label>
@@ -12,7 +21,13 @@ function InputField({ error, id, label, ...inputProps }) {
   );
 }
 
-function GuestSelect({ value, onChange }) {
+function GuestSelect({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: ChangeEventHandler<HTMLSelectElement>;
+}) {
   return (
     <div className="input-group">
       <label htmlFor="guests">Number of Guests</label>
@@ -28,14 +43,14 @@ function GuestSelect({ value, onChange }) {
   );
 }
 
-function OrderField({ error, orderRef }) {
+function OrderField({ error, orderRef }: { error?: string; orderRef: RefObject<HTMLTextAreaElement | null> }) {
   return (
     <div className="input-group full-width">
       <label htmlFor="order">Your Order</label>
       <textarea
         id="order"
         ref={orderRef}
-        rows="4"
+        rows={4}
         placeholder="2 Lattes, 1 Masala Bun..."
         aria-invalid={Boolean(error)}
       ></textarea>
@@ -44,6 +59,15 @@ function OrderField({ error, orderRef }) {
   );
 }
 
+type BookingFormPresenterProps = {
+  mode: BookingMode;
+  form: BookingForm;
+  errors: BookingErrors;
+  orderRef: RefObject<HTMLTextAreaElement | null>;
+  onChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement>;
+  onSubmit: FormEventHandler<HTMLFormElement>;
+};
+
 export default function BookingFormPresenter({
   mode,
   form,
@@ -51,7 +75,7 @@ export default function BookingFormPresenter({
   orderRef,
   onChange,
   onSubmit,
-}) {
+}: BookingFormPresenterProps) {
   const isReserve = mode === 'reserve';
 
   return (

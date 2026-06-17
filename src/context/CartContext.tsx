@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { CartContext } from './cartContext.jsx';
+import { CartContext } from './CartContextValue';
+import type { CartItem, MenuItem, PropsWithChildren } from '../types';
 
 const STORAGE_KEY = 'aura-cafe-cart';
 
-const readStoredCartItems = () => {
+const readStoredCartItems = (): CartItem[] => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return [];
@@ -11,14 +12,14 @@ const readStoredCartItems = () => {
     const parsed = JSON.parse(stored);
     if (!Array.isArray(parsed)) return [];
 
-    return parsed.reduce((items, storedItem) => {
+    return parsed.reduce<CartItem[]>((items, storedItem: Partial<CartItem> & { basePrice?: number }) => {
       if (!storedItem?.id) return items;
 
       const cleanItem = {
         ...storedItem,
         price: storedItem.basePrice || storedItem.price,
         quantity: storedItem.quantity || 1,
-      };
+      } as CartItem & { basePrice?: number; cartId?: string; selectedOptions?: unknown; selectedOptionDetails?: unknown };
       delete cleanItem.basePrice;
       delete cleanItem.cartId;
       delete cleanItem.selectedOptions;
@@ -36,7 +37,7 @@ const readStoredCartItems = () => {
   }
 };
 
-const addOrIncrementItem = (items, item) => {
+const addOrIncrementItem = (items: CartItem[], item: MenuItem | CartItem): CartItem[] => {
   const itemExists = items.some((cartItem) => cartItem.id === item.id);
 
   if (!itemExists) return [...items, { ...item, quantity: 1 }];
@@ -46,13 +47,13 @@ const addOrIncrementItem = (items, item) => {
   );
 };
 
-const sumCartQuantities = (items) => items.reduce((total, item) => total + item.quantity, 0);
+const sumCartQuantities = (items: CartItem[]) => items.reduce((total, item) => total + item.quantity, 0);
 
-const sumCartPrices = (items) =>
+const sumCartPrices = (items: CartItem[]) =>
   items.reduce((total, item) => total + item.price * item.quantity, 0);
 
-export function CartProvider({ children }) {
-  const [items, setItems] = useState(readStoredCartItems);
+export function CartProvider({ children }: PropsWithChildren) {
+  const [items, setItems] = useState<CartItem[]>(readStoredCartItems);
 
   useEffect(() => {
     if (items.length > 0) {
@@ -62,15 +63,15 @@ export function CartProvider({ children }) {
     }
   }, [items]);
 
-  const addToCart = useCallback((item) => {
+  const addToCart = useCallback((item: MenuItem | CartItem) => {
     setItems((current) => addOrIncrementItem(current, item));
   }, []);
 
-  const removeFromCart = useCallback((cartItemId) => {
+  const removeFromCart = useCallback((cartItemId: string) => {
     setItems((current) => current.filter((item) => item.id !== cartItemId));
   }, []);
 
-  const decrementCartItem = useCallback((cartItemId) => {
+  const decrementCartItem = useCallback((cartItemId: string) => {
     setItems((current) =>
       current.flatMap((item) => {
         if (item.id !== cartItemId) return [item];

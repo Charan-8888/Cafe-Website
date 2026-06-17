@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { getMenuItemById } from '../data/menuItems';
 import { useCart } from '../context/useCart';
 
-const formatPrice = (price) =>
+const formatPrice = (price: number) =>
   new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',

@@ -4,8 +4,9 @@ import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { BookingProvider } from '../context/BookingContext';
 import BookingFormContainer from './BookingFormContainer';
+import type { BookingMode } from '../types';
 
-const renderBookingForm = (mode = 'reserve') =>
+const renderBookingForm = (mode: BookingMode = 'reserve') =>
   render(
     <MemoryRouter>
       <BookingProvider>

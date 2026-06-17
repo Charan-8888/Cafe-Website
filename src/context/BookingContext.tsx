@@ -1,29 +1,30 @@
 import { useEffect, useMemo, useState } from 'react';
-import { BookingContext } from './bookingContext.jsx';
+import { BookingContext } from './BookingContextValue';
+import type { Booking, NewBooking, PropsWithChildren } from '../types';
 
 const STORAGE_KEY = 'aura-cafe-bookings';
 const LEGACY_STORAGE_KEY = 'aura-cafe-booking';
 
-const readStoredBookings = () => {
+const readStoredBookings = (): Booking[] => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      return Array.isArray(parsed) ? parsed : [];
+      return Array.isArray(parsed) ? (parsed as Booking[]) : [];
     }
 
     const legacyStored = localStorage.getItem(LEGACY_STORAGE_KEY);
     if (!legacyStored) return [];
 
     const legacyBooking = JSON.parse(legacyStored);
-    return legacyBooking ? [legacyBooking] : [];
+    return legacyBooking ? [legacyBooking as Booking] : [];
   } catch {
     return [];
   }
 };
 
-export function BookingProvider({ children }) {
-  const [bookings, setBookings] = useState(readStoredBookings);
+export function BookingProvider({ children }: PropsWithChildren) {
+  const [bookings, setBookings] = useState<Booking[]>(readStoredBookings);
   const lastBooking = bookings.at(-1) || null;
 
   useEffect(() => {
@@ -47,7 +48,7 @@ export function BookingProvider({ children }) {
       bookings,
       lastBooking,
       bookingLabel,
-      saveBooking: (booking) =>
+      saveBooking: (booking: NewBooking) =>
         setBookings((current) => [
           ...current,
           {

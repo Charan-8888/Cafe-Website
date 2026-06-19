@@ -1,22 +1,23 @@
 import { Link } from 'react-router-dom';
+import { assetPath } from '../utils/assetPath';
 
 const highlights = [
   {
     title: 'Seasonal espresso',
     detail: 'Rotating lots dialed in for clarity, sweetness, and a steady morning rhythm.',
-    image: '/images/menu_latte.jpg',
+    image: assetPath('/images/menu_latte.jpg'),
     alt: 'Latte with detailed milk art',
   },
   {
     title: 'Small-batch pastry',
     detail: 'Croissants, buns, and tarts baked through service instead of all at once.',
-    image: '/images/menu_almond_croissant.jpg',
+    image: assetPath('/images/menu_almond_croissant.jpg'),
     alt: 'Fresh almond croissant on a plate',
   },
   {
     title: 'Tables held daily',
     detail: 'A quiet reservation flow for breakfast meetings, solo work, and weekend plans.',
-    image: '/images/cafe_vibes.png',
+    image: assetPath('/images/cafe_vibes.png'),
     alt: 'Warm cafe seating with coffee service',
   },
 ];
@@ -89,8 +90,8 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="visit-image-stack" aria-hidden="true">
-            <img src="/images/hero_bg.png" alt="" />
-            <img src="/images/croissant_pastry.png" alt="" />
+            <img src={assetPath('/images/hero_bg.png')} alt="" />
+            <img src={assetPath('/images/croissant_pastry.png')} alt="" />
           </div>
         </div>
       </section>

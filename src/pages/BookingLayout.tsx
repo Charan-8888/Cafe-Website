@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
+import { assetPath } from '../utils/assetPath';
 
 const reservationDetails = [
   ['Best windows', '08:00 - 10:30'],
@@ -29,7 +30,7 @@ export default function BookingLayout() {
             </div>
           </div>
           <aside className="reservation-guide" aria-label="Reservation details">
-            <img src="/images/bg_booking.jpg" alt="Cafe table set for a reservation" />
+            <img src={assetPath('/images/bg_booking.jpg')} alt="Cafe table set for a reservation" />
             <div>
               <span className="section-subtitle">Service Notes</span>
               <h2>Made for small groups and focused mornings.</h2>
